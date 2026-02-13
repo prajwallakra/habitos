@@ -1,3 +1,5 @@
+import Calendar from "./components/Calendar"
+
 function MainLayout() {
   const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
 
@@ -10,25 +12,7 @@ function MainLayout() {
       </h1>
 
       {/* Calendar */}
-      <section className="bg-[#171717] border border-[#2a2a2a] rounded-xl p-6 mb-6">
-
-        <h2 className="text-lg font-semibold mb-4">
-          Calendar
-        </h2>
-
-        <div className="grid grid-cols-7 gap-3">
-          {days.map(day => (
-            <div
-              key={day}
-              className="bg-[#1f1f1f] border border-[#2a2a2a] rounded-lg h-32 flex items-center justify-center text-gray-400 hover:border-indigo-500 transition cursor-pointer"
-            >
-              {day}
-            </div>
-          ))}
-        </div>
-
-      </section>
-
+      <Calendar />
       {/* Habits */}
       <section className="bg-[#171717] border border-[#2a2a2a] rounded-xl p-6">
 
