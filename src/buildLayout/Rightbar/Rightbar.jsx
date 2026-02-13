@@ -1,4 +1,4 @@
-function Leftbar() {
+function Rightbar() {
   return (
     <aside className="h-screen w-[320px] bg-[#171717] border-l border-[#2a2a2a] p-6 flex flex-col text-gray-200">
 
@@ -41,4 +41,4 @@ function Leftbar() {
   )
 }
 
-export default Leftbar
+export default Rightbar
