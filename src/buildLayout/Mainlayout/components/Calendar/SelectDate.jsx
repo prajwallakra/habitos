@@ -8,7 +8,7 @@ function SelectDate({ baseDate, onSelect, onClose }) {
   const ref = useRef()
   const yearScrollRef = useRef()
 
-  /* close popup when clicking outside */
+  // close popup when clicking outside 
   useEffect(() => {
     function handleClick(e) {
       if (!ref.current?.contains(e.target)) {
@@ -19,7 +19,7 @@ function SelectDate({ baseDate, onSelect, onClose }) {
     return () => document.removeEventListener("mousedown", handleClick)
   }, [onClose])
 
-  /* auto scroll active year to center */
+  //  auto scroll active year to center
   useEffect(() => {
     if (mode === "years" && yearScrollRef.current) {
       const container = yearScrollRef.current
@@ -44,7 +44,7 @@ function SelectDate({ baseDate, onSelect, onClose }) {
   const year = viewDate.getFullYear()
   const month = viewDate.getMonth()
 
-  /* calculate month layout */
+  // calculate month laout
   const firstDay = new Date(year, month, 1).getDay()
   const offset = firstDay === 0 ? 6 : firstDay - 1
 
@@ -55,19 +55,19 @@ function SelectDate({ baseDate, onSelect, onClose }) {
     ...Array.from({ length: lastDay }, (_, i) => i + 1)
   ]
 
-  /* year list */
+  //  year list 
   const years = Array.from({ length: 200 }, (_, i) => year - 100 + i)
 
   const selected = new Date(baseDate)
 
-  /* today checker */
+  // today checker 
   const today = new Date()
   const isToday = (d) =>
     today.getDate() === d &&
     today.getMonth() === month &&
     today.getFullYear() === year
 
-  /* select day */
+  //  select day 
   function handlePick(day) {
     const d = new Date(Date.UTC(year, month, day))
     onSelect(d.toISOString().split("T")[0])

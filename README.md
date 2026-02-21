@@ -1,18 +1,103 @@
-# React + Vite
+# Habitos - Habit & Task Tracking App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+A modern, full-featured habit and task tracking application built with React and TailwindCSS. Track your daily habits, manage tasks, and build consistency with beautiful visual feedback.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 💡 Features
+ - **Calendar :** have daily task tracking feature 
+ - **Habit Tracker :** have daily task related habit-tracking feature 
+ - **ToDos :** have list of all the task that is to be done today, arranged with different kind of filters
 
-## React Compiler
+## 🌐 Live Demo
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Try It Out
 
-Note: This will impact Vite dev & build performances.
+- **Frontend Demo**: [https://habitos.xyz](https://habitos.xyz)
+- **UI Design Preview**: [https://excalidraw.com/#room=84640e4c6e2a7c832277,tBIcfKAGkP3AbTKeo3MxHw](https://excalidraw.com/#room=84640e4c6e2a7c832277,tBIcfKAGkP3AbTKeo3MxHw)
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend Framework:** React 18
+- **Build Tool:** Vite
+- **Styling:** TailwindCSS
+- **State Management:** React Context API
+- **Storage:** LocalStorage
+- **Icons:** SVG icons
+- **Animations:** CSS Transitions
+
+## 📁 Project Structure
+```bash
+src/
+├── buildLayout/
+│ ├── Mainlayout/
+│ │  ├── Mainlayout.jsx
+│ │  └── components/
+│ │      ├── Calendar/
+│ │      │ ├── Calendar.jsx
+│ │      │ ├── SelectDate.jsx
+│ │      │ ├── AddTaskModal.jsx
+│ │      │ └── ShowTasks.jsx
+│ │      └── habit/
+│ │        ├── habit.jsx
+│ │        ├── HabitCard.jsx
+│ │        ├── HabitDetailModal.jsx
+│ │        ├── HabitForm.jsx
+│ │        ├── HabitStats.jsx
+│ │        ├── HabitFilters.jsx
+│ │        └── hooks/
+│ │            └── useHabitData.js
+│ └── Rightbar/
+│     ├── Rightbar.jsx
+│     ├── components/
+│     │ ├── Header.jsx
+│     │ ├── FilterTabs.jsx
+│     │ ├── TaskSection.jsx
+│     │ ├── TaskItem.jsx
+│     │ ├── TaskList.jsx
+│     │ └── NotesSection.jsx
+│     └── hooks/
+│       └── useTaskFilters.js
+├── context/
+│ └── AppContext.jsx
+└── App.jsx
+
+```
+##  🔰 Getting Started
+
+
+### Prerequisites
+- **Node.js** (v14 or higher)
+- **npm** package manager
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/prajwallakra/habitos
+   cd habitos
+   ```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+4. **Open your browser navigate to see the app in action** 
+   ```bash
+   http://localhost:5173 
+   ```
+
+
+---
+
+<div align="center">
+
+### ⭐ Star this repository if you find it helpful!
+
+**Made with ❤️ for better education management**
+
+[Report Bug](https://github.com/prajwallakra/habitos/issues) · [Request Feature](https://github.com/prajwallakra/habitos/issues) · [Contribute](./CONTRIBUTING.md)
+
+</div>
