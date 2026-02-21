@@ -1,11 +1,10 @@
 import { useMemo } from "react"
-import { useApp } from "../../../../../context/AppContext"
+import { useApp } from "../../../../context/AppContext"
 
 export function useHabitData() {
   const { habits, tasks } = useApp()
   const today = new Date().toISOString().split('T')[0]
 
-  // Calculate basic stats
   const stats = useMemo(() => {
     const totalHabits = habits.length
     const habitsCompletedToday = habits.filter(habit => {
@@ -20,14 +19,14 @@ export function useHabitData() {
     }
   }, [habits, tasks, today])
 
-  // Process habits with enriched data
   const habitsWithData = useMemo(() => {
     return habits.map(habit => {
       const habitTasks = tasks.filter(t => t.habitId === habit.id)
       const todayTasks = habitTasks.filter(t => t.date === today)
+      const targetDays = habit.targetDays || 365 // Default to 365 if not set
       
-      // Get last 365 days completion
-      const last365Days = Array.from({ length: 365 }, (_, i) => {
+      // Get last targetDays completion
+      const lastTargetDays = Array.from({ length: targetDays }, (_, i) => {
         const date = new Date()
         date.setDate(date.getDate() - i)
         const dateStr = date.toISOString().split('T')[0]
@@ -53,11 +52,12 @@ export function useHabitData() {
         }
       }
 
-      const completedDays = last365Days.filter(d => d.completed).length
-      const completionRate = Math.round((completedDays / 365) * 100)
+      const completedDays = lastTargetDays.filter(d => d.completed).length
+      const completionRate = Math.round((completedDays / targetDays) * 100)
 
       return {
         ...habit,
+        targetDays,
         todayTasks,
         completedToday: todayTasks.filter(t => t.completed).length,
         totalToday: todayTasks.length,
@@ -67,7 +67,7 @@ export function useHabitData() {
         completionRate,
         totalTasks: habitTasks.length,
         completedTasks: habitTasks.filter(t => t.completed).length,
-        last365Days
+        lastTargetDays // Renamed from last365Days to be more generic
       }
     })
   }, [habits, tasks, today])

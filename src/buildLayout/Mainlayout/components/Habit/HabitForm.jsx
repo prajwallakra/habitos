@@ -5,12 +5,22 @@ const COLOR_OPTIONS = [
   "#6366f1", "#ef4444", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6", "#ec4899"
 ]
 
+const TARGET_OPTIONS = [
+  { value: 30, label: "30 Days" },
+  { value: 90, label: "90 Days" },
+  { value: 180, label: "180 Days" },
+  { value: 365, label: "365 Days (Year)" },
+  { value: 730, label: "2 Years" },
+  { value: 1095, label: "3 Years" },
+]
+
 function HabitForm({ habit, onClose }) {
   const { addHabit, updateHabit } = useApp()
   const [formData, setFormData] = useState({
     name: habit?.name || "",
     description: habit?.description || "",
-    color: habit?.color || "#6366f1"
+    color: habit?.color || "#6366f1",
+    targetDays: habit?.targetDays || 365 // Default to 365 days
   })
 
   const handleSubmit = (e) => {
@@ -95,6 +105,11 @@ function Form({ formData, onSubmit, onUpdateField, onClose, isEditing }) {
         placeholder="e.g., 10 minutes of mindfulness"
       />
 
+      <TargetSelector
+        value={formData.targetDays}
+        onChange={(value) => onUpdateField('targetDays', parseInt(value))}
+      />
+
       <ColorPicker
         selectedColor={formData.color}
         onColorSelect={(color) => onUpdateField('color', color)}
@@ -118,6 +133,30 @@ function InputField({ label, value, onChange, placeholder, autoFocus }) {
         className="w-full bg-[#1f1f1f] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500"
         autoFocus={autoFocus}
       />
+    </div>
+  )
+}
+
+function TargetSelector({ value, onChange }) {
+  return (
+    <div>
+      <label className="text-xs text-[#9c9c9c] uppercase tracking-wider mb-1 block">
+        Target Duration
+      </label>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full bg-[#1f1f1f] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500"
+      >
+        {TARGET_OPTIONS.map(option => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <p className="text-[10px] text-[#6b6b6b] mt-1">
+        How many days do you want to track this habit?
+      </p>
     </div>
   )
 }

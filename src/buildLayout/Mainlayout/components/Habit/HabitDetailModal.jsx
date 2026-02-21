@@ -36,11 +36,11 @@ function generateHeatmapData(habit) {
       const date = new Date(today)
       date.setDate(today.getDate() - (week * 7 + day))
       const dateStr = date.toISOString().split('T')[0]
-      const dayData = habit.last365Days.find(d => d.date === dateStr)
+      const dayData = habit.lastTargetDays?.find(d => d.date === dateStr) || { completed: false, count: 0 }
       weekDays.push({
         date: dateStr,
-        completed: dayData?.completed || false,
-        count: dayData?.count || 0
+        completed: dayData.completed,
+        count: dayData.count
       })
     }
     weeks.push(weekDays)
@@ -77,15 +77,21 @@ function ModalHeader({ habit, onClose, onEdit }) {
 }
 
 function StatsOverview({ habit }) {
+  const targetDisplay = habit.targetDays === 365 ? "Year" : 
+                        habit.targetDays === 730 ? "2 Years" :
+                        habit.targetDays === 1095 ? "3 Years" :
+                        `${habit.targetDays} Days`
+
   const stats = [
-    { label: 'Total Days', value: habit.completedDays, color: 'text-white' },
+    { label: 'Completed', value: habit.completedDays, color: 'text-white' },
+    { label: 'Target', value: targetDisplay, color: 'text-blue-400' },
     { label: 'Current Streak', value: habit.streak, color: 'text-green-400' },
     { label: 'Success Rate', value: `${habit.completionRate}%`, color: 'text-indigo-400' },
     { label: 'Total Tasks', value: habit.totalTasks, color: 'text-white' }
   ]
 
   return (
-    <div className="grid grid-cols-4 gap-4 p-6 border-b border-[#2a2a2a]">
+    <div className="grid grid-cols-5 gap-4 p-6 border-b border-[#2a2a2a]">
       {stats.map((stat, index) => (
         <StatCard key={index} {...stat} />
       ))}
@@ -109,7 +115,7 @@ function HeatmapSection({ habit, heatmapData, monthLabels }) {
       <YearNavigation />
       
       <div className="overflow-x-auto">
-        <div className="min-w-full">
+        <div className="w-full">
           <XAxisLabels labels={monthLabels} />
           
           <div className="flex gap-1">

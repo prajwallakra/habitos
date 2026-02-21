@@ -26,6 +26,12 @@ function HabitCard({ habit, onClick, onEdit, onDelete }) {
     }
   }, [habit.completionRate])
 
+  // Format target display
+  const targetDisplay = habit.targetDays === 365 ? "Year" : 
+                        habit.targetDays === 730 ? "2 Years" :
+                        habit.targetDays === 1095 ? "3 Years" :
+                        `${habit.targetDays} Days`
+
   return (
     <div 
       onClick={onClick}
@@ -52,10 +58,11 @@ function HabitCard({ habit, onClick, onEdit, onDelete }) {
           offset={offset}
           progressColor={progressColor}
           completedDays={habit.completedDays}
+          targetDays={habit.targetDays}
         />
 
         {/* Habit Info */}
-        <HabitInfo habit={habit} />
+        <HabitInfo habit={habit} targetDisplay={targetDisplay} />
       </div>
 
       {/* Mini progress bar for today */}
@@ -66,24 +73,8 @@ function HabitCard({ habit, onClick, onEdit, onDelete }) {
   )
 }
 
-// Sub-components
-function EditIcon() {
-  return (
-    <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-    </svg>
-  )
-}
-
-function DeleteIcon() {
-  return (
-    <svg className="w-3.5 h-3.5 text-gray-400 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-    </svg>
-  )
-}
-
-function CircularProgress({ size, radius, strokeWidth, circumference, offset, progressColor, completedDays }) {
+// Updated CircularProgress to show target
+function CircularProgress({ size, radius, strokeWidth, circumference, offset, progressColor, completedDays, targetDays }) {
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="transform -rotate-90">
@@ -110,16 +101,21 @@ function CircularProgress({ size, radius, strokeWidth, circumference, offset, pr
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-xl font-bold text-white">{completedDays}</span>
-        <span className="text-[10px] text-[#9c9c9c]">/365</span>
+        <span className="text-[10px] text-[#9c9c9c]">/{targetDays}</span>
       </div>
     </div>
   )
 }
 
-function HabitInfo({ habit }) {
+// Updated HabitInfo to show target
+function HabitInfo({ habit, targetDisplay }) {
   return (
     <div className="flex-1 min-w-0">
-      <h3 className="text-white font-semibold text-lg truncate">{habit.name}</h3>
+      <div className="flex items-center gap-1 mt-1">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: habit.color }} />
+        <h3 className="text-white font-semibold text-lg truncate">{habit.name}</h3>
+      </div>
+      
       
       <div className="mt-3 space-y-2">
         <StatRow 
@@ -129,7 +125,7 @@ function HabitInfo({ habit }) {
         />
         
         <StatRow 
-          label={<><span>🔥</span> Streak</>} 
+          label={<> Streak</>} 
           value={`${habit.streak} days`}
           valueClass="text-white font-medium"
         />
@@ -140,8 +136,14 @@ function HabitInfo({ habit }) {
           valueClass="text-indigo-400 font-medium"
         />
 
+        <StatRow 
+          label="Target" 
+          value={targetDisplay}
+          valueClass="text-blue-400 font-medium"
+        />
+
         <div className="flex items-center gap-1 mt-1">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: habit.color }} />
+          
           <span className="text-[10px] text-[#6b6b6b] truncate">
             {habit.description || 'No description'}
           </span>
@@ -170,6 +172,23 @@ function TodayProgressBar({ progress, color }) {
         />
       </div>
     </div>
+  )
+}
+
+// Icons remain the same
+function EditIcon() {
+  return (
+    <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+    </svg>
+  )
+}
+
+function DeleteIcon() {
+  return (
+    <svg className="w-3.5 h-3.5 text-gray-400 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>
   )
 }
 
