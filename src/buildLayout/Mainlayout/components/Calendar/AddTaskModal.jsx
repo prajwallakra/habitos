@@ -99,6 +99,17 @@ function AddTaskModal({ date, onClose, taskToEdit = null }) {
 
   const selectedHabit = habits.find(h => h.id === habitId)
 
+  // Handle habit creation completion
+  const handleHabitFormClose = (newHabitId) => {
+    setShowHabitForm(false)
+    if (newHabitId) {
+      // Automatically select the newly created habit
+      setHabitId(newHabitId)
+      // Refresh the habits list by closing and reopening popup if needed
+      setSearchTerm("")
+    }
+  }
+
   return (
     <>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -328,7 +339,7 @@ function AddTaskModal({ date, onClose, taskToEdit = null }) {
             </div>
 
             {/* Habits List */}
-            <div className="p-2 overflow-y-auto max-h-100">
+            <div className="p-2 overflow-y-auto max-h-96">
               {/* None Option */}
               <button
                 onClick={() => {
@@ -426,11 +437,7 @@ function AddTaskModal({ date, onClose, taskToEdit = null }) {
       {/* Habit Form Modal */}
       {showHabitForm && (
         <HabitForm
-          onClose={() => {
-            setShowHabitForm(false)
-            // Optionally, you could automatically select the newly created habit
-            // The new habit will be added to the context and appear in the list
-          }}
+          onClose={(newHabitId) => handleHabitFormClose(newHabitId)}
         />
       )}
     </>

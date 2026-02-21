@@ -29,14 +29,16 @@ function HabitForm({ habit, onClose }) {
 
     if (habit) {
       updateHabit(habit.id, formData)
+      onClose() 
     } else {
+      const newHabitId = crypto.randomUUID()
       addHabit({
-        id: crypto.randomUUID(),
+        id: newHabitId,
         ...formData,
         createdAt: new Date().toISOString()
       })
+      onClose(newHabitId)
     }
-    onClose()
   }
 
   const updateField = (field, value) => {
@@ -61,7 +63,7 @@ function HabitForm({ habit, onClose }) {
   )
 }
 
-// Sub-components
+// Sub-components (no changes needed below)
 function ModalOverlay({ children, onClose }) {
   return (
     <div 
