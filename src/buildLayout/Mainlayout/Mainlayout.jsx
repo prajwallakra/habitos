@@ -1,5 +1,5 @@
-import Calendar from "./components/Calendar"
-import Habit from "./components/Habit"
+import Calendar from "./components/Calendar/Calendar"
+import Habit from "./components/Habit/Habit"
 
 function MainLayout() {
   return (

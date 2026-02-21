@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react"
 import { useApp } from "../../context/AppContext"
-import ShowTasks from "../Mainlayout/components/ShowTasks"
+import ShowTasks from "../Mainlayout/components/Calendar/ShowTasks"
 
 /* ---------- Task Item Component ---------- */
 function TaskItem({ task, onToggleComplete }) {
