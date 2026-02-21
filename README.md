@@ -101,3 +101,4 @@ src/
 [Report Bug](https://github.com/prajwallakra/habitos/issues) · [Request Feature](https://github.com/prajwallakra/habitos/issues) · [Contribute](./CONTRIBUTING.md)
 
 </div>
+<div align="center">  <sub>© 2026 Habitos. All rights reserved.</sub> </div> 
