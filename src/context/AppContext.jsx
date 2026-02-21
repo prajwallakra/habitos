@@ -17,7 +17,15 @@ export function AppProvider({ children }) {
   /* ---------- HABITS with localStorage ---------- */
   const [habits, setHabits] = useState(() => {
     const savedHabits = localStorage.getItem("habits")
-    return savedHabits ? JSON.parse(savedHabits) : []
+    if (savedHabits) {
+      const parsedHabits = JSON.parse(savedHabits)
+      // Ensure all habits have targetDays (for backward compatibility)
+      return parsedHabits.map(habit => ({
+        ...habit,
+        targetDays: habit.targetDays || 365 // Default to 365 if not set
+      }))
+    }
+    return []
   })
 
   /* ---------- NOTES with localStorage ---------- */
@@ -86,8 +94,13 @@ export function AppProvider({ children }) {
   /* ---------- HABIT FUNCTIONS ---------- */
   function addHabit(habit) {
     const newHabit = {
-      ...habit,
-      createdAt: new Date().toISOString()
+      id: habit.id || crypto.randomUUID(),
+      name: habit.name,
+      description: habit.description || "",
+      color: habit.color || "#6366f1",
+      targetDays: habit.targetDays || 365, // Ensure targetDays is set
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     }
     setHabits(prev => [...prev, newHabit])
   }
@@ -96,7 +109,11 @@ export function AppProvider({ children }) {
     setHabits(prev =>
       prev.map(habit =>
         habit.id === id
-          ? { ...habit, ...updates }
+          ? { 
+              ...habit, 
+              ...updates, 
+              updatedAt: new Date().toISOString() 
+            }
           : habit
       )
     )
@@ -104,6 +121,44 @@ export function AppProvider({ children }) {
 
   function deleteHabit(id) {
     setHabits(prev => prev.filter(habit => habit.id !== id))
+  }
+
+  /* ---------- HELPER FUNCTIONS ---------- */
+  function getHabitById(id) {
+    return habits.find(habit => habit.id === id)
+  }
+
+  function getTasksByHabit(habitId) {
+    return tasks.filter(task => task.habitId === habitId)
+  }
+
+  function getHabitStats(habitId) {
+    const habitTasks = tasks.filter(task => task.habitId === habitId)
+    const completedTasks = habitTasks.filter(t => t.completed).length
+    const totalTasks = habitTasks.length
+    
+    // Calculate streak
+    let streak = 0
+    const today = new Date().toISOString().split('T')[0]
+    let currentDate = new Date()
+    
+    while (true) {
+      const dateStr = currentDate.toISOString().split('T')[0]
+      const dayTasks = habitTasks.filter(t => t.date === dateStr)
+      if (dayTasks.some(t => t.completed)) {
+        streak++
+        currentDate.setDate(currentDate.getDate() - 1)
+      } else {
+        break
+      }
+    }
+
+    return {
+      totalTasks,
+      completedTasks,
+      streak,
+      completionRate: totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
+    }
   }
 
   /* ---------- NOTES FUNCTIONS ---------- */
@@ -124,10 +179,20 @@ export function AppProvider({ children }) {
     ? Math.round((completedTasksCount / totalTasksCount) * 100) 
     : 0
 
+  // Habits with their associated tasks
+  const habitsWithTasks = habits.map(habit => ({
+    ...habit,
+    tasks: tasks.filter(task => task.habitId === habit.id),
+    stats: getHabitStats(habit.id)
+  }))
+
   /* ---------- CONTEXT VALUE ---------- */
   const value = {
+    // Date
     selectedDate,
     setSelectedDate,
+    
+    // Tasks
     tasks,
     todaysTasks,
     tasksByDate,
@@ -135,12 +200,22 @@ export function AppProvider({ children }) {
     updateTask,
     toggleTask,
     deleteTask,
+    
+    // Habits
     habits,
+    habitsWithTasks,
     addHabit,
     updateHabit,
     deleteHabit,
+    getHabitById,
+    getTasksByHabit,
+    getHabitStats,
+    
+    // Notes
     notes,
     updateNotes,
+    
+    // Stats
     completedTasksCount,
     totalTasksCount,
     completionRate
