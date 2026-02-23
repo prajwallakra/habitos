@@ -9,13 +9,12 @@ function Calendar() {
 
   const [showPicker, setShowPicker] = useState(false)
   const [taskDate, setTaskDate] = useState(null)
-  const [editingTask, setEditingTask] = useState(null) // New state for editing
+  const [editingTask, setEditingTask] = useState(null)
 
   const weekDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
 
   const baseDate = new Date(selectedDate)
 
-  //  generate week safely 
   const currentWeek = useMemo(() => {
     const base = new Date(baseDate)
     const day = base.getDay()
@@ -31,33 +30,31 @@ function Calendar() {
     })
   }, [selectedDate])
 
-  // week navigation 
   function changeWeek(offset) {
     const d = new Date(selectedDate)
     d.setDate(d.getDate() + offset * 7)
     setSelectedDate(d.toISOString().split("T")[0])
   }
 
-  //  handle task click for editing 
   function handleTaskClick(task) {
     setEditingTask(task)
   }
 
-  //  close modal 
   function handleCloseModal() {
     setTaskDate(null)
     setEditingTask(null)
   }
 
-  //  label 
   const label = new Date(selectedDate)
     .toLocaleString("default", { month: "short", year: "numeric" })
 
   const todayString = new Date().toISOString().split("T")[0]
 
   return (
-    <section className="relative bg-[#171717] border border-[#2a2a2a] rounded-xl p-6 mb-6">
-      <h2 className="text-lg font-semibold mb-4">Calendar</h2>
+    <section className="relative bg-(--bg-card) border border-(--border) rounded-xl p-6 mb-6">
+      <h2 className="text-lg font-semibold text-(--text-primary) mb-4">
+        Calendar
+      </h2>
 
       {/* WEEK GRID */}
       <div className="grid grid-cols-7 gap-3 mb-4">
@@ -73,33 +70,38 @@ function Calendar() {
               className={`
                 group relative h-48 rounded-lg cursor-pointer
                 flex flex-col pt-3 transition-all duration-200
-                ${isSelected
-                  ? "bg-indigo-600/20 ring-2 ring-indigo-500"
-                  : "bg-[#1f1f1f] hover:bg-[#252525]"
+                ${
+                  isSelected
+                    ? "bg-indigo-600/20 ring-2 ring-indigo-500"
+                    : "bg-(--bg-hover) hover:opacity-80"
                 }
               `}
             >
               {/* Day Header */}
               <div className="px-3 flex items-center justify-between">
-                {/* Day and Date with Today highlight */}
-                <div className={`
-                  ${isToday && !isSelected ? 'bg-blue-500/20 rounded-lg px-2 py-1 -ml-2' : ''}
-                `}>
-                  <span className="text-xs text-gray-400">{weekDays[i]}</span>
-                  <span className="text-xl font-semibold ml-2 text-white">
+                <div
+                  className={`${
+                    isToday && !isSelected
+                      ? "bg-blue-500/20 rounded-lg px-2 py-1 -ml-2"
+                      : ""
+                  }`}
+                >
+                  <span className="text-xs text-(--text-secondary)">
+                    {weekDays[i]}
+                  </span>
+                  <span className="text-xl font-semibold ml-2 text-(--text-primary)">
                     {d.getDate()}
                   </span>
                 </div>
-                
-                {/* Task Counter */}
+
                 <ShowTasks date={date} mode="counter" />
               </div>
 
-              {/* Tasks List - Pass onTaskClick prop */}
+              {/* Tasks List */}
               <div className="flex-1 overflow-y-auto mt-2 px-2 space-y-1.5 custom-scrollbar">
-                <ShowTasks 
-                  date={date} 
-                  mode="list" 
+                <ShowTasks
+                  date={date}
+                  mode="list"
                   onTaskClick={handleTaskClick}
                 />
               </div>
@@ -117,7 +119,12 @@ function Calendar() {
                   flex items-center justify-center shadow-lg
                 "
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                 </svg>
               </button>
@@ -130,21 +137,21 @@ function Calendar() {
       <div className="flex justify-between items-center mt-4">
         <button
           onClick={() => changeWeek(-1)}
-          className="px-4 py-2 bg-[#1f1f1f] rounded-lg hover:bg-[#262626] transition-colors"
+          className="px-4 py-2 bg-(--bg-hover) rounded-lg hover:opacity-80 transition"
         >
           ←
         </button>
 
         <button
           onClick={() => setShowPicker(true)}
-          className="font-medium hover:text-indigo-400 transition-colors"
+          className="font-medium text-(--text-primary) hover:text-indigo-400 transition-colors"
         >
           {label}
         </button>
 
         <button
           onClick={() => changeWeek(1)}
-          className="px-4 py-2 bg-[#1f1f1f] rounded-lg hover:bg-[#262626] transition-colors"
+          className="px-4 py-2 bg-(--bg-hover) rounded-lg hover:opacity-80 transition"
         >
           →
         </button>
@@ -159,7 +166,7 @@ function Calendar() {
         />
       )}
 
-      {/* TASK MODAL - For both creating and editing */}
+      {/* TASK MODAL */}
       {(taskDate || editingTask) && (
         <AddTaskModal
           date={taskDate || editingTask?.date}

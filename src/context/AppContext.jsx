@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react"
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react"
 
 const AppContext = createContext()
 
@@ -75,8 +75,8 @@ export function AppProvider({ children }) {
     setTasks(prev =>
       prev.map(task =>
         task.id === id
-          ? { 
-              ...task, 
+          ? {
+              ...task,
               completed: !task.completed,
               status: !task.completed ? "completed" : task.status,
               updatedAt: new Date().toISOString()
@@ -108,10 +108,10 @@ export function AppProvider({ children }) {
     setHabits(prev =>
       prev.map(habit =>
         habit.id === id
-          ? { 
-              ...habit, 
-              ...updates, 
-              updatedAt: new Date().toISOString() 
+          ? {
+              ...habit,
+              ...updates,
+              updatedAt: new Date().toISOString()
             }
           : habit
       )
@@ -136,11 +136,11 @@ export function AppProvider({ children }) {
 
   const completedTasksCount = tasks.filter(t => t.completed).length
   const totalTasksCount = tasks.length
-  const completionRate = totalTasksCount > 0 
-    ? Math.round((completedTasksCount / totalTasksCount) * 100) 
-    : 0
+  const completionRate =
+    totalTasksCount > 0
+      ? Math.round((completedTasksCount / totalTasksCount) * 100)
+      : 0
 
-  // Memoized helper functions
   const getHabitById = useCallback((id) => {
     return habits.find(habit => habit.id === id)
   }, [habits])
@@ -153,11 +153,10 @@ export function AppProvider({ children }) {
     const habitTasks = tasks.filter(task => task.habitId === habitId)
     const completedTasks = habitTasks.filter(t => t.completed).length
     const totalTasks = habitTasks.length
-    
+
     let streak = 0
-    const today = new Date().toISOString().split('T')[0]
     let currentDate = new Date()
-    
+
     while (true) {
       const dateStr = currentDate.toISOString().split('T')[0]
       const dayTasks = habitTasks.filter(t => t.date === dateStr)
@@ -173,11 +172,13 @@ export function AppProvider({ children }) {
       totalTasks,
       completedTasks,
       streak,
-      completionRate: totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
+      completionRate:
+        totalTasks > 0
+          ? Math.round((completedTasks / totalTasks) * 100)
+          : 0
     }
   }, [tasks])
 
-  // Memoized habits with tasks
   const habitsWithTasks = useMemo(() => {
     return habits.map(habit => ({
       ...habit,
