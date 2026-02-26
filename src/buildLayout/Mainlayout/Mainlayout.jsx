@@ -1,5 +1,6 @@
 import Calendar from "./components/Calendar/Calendar"
 import Habit from "./components/Habit/Habit"
+import Footer from "./components/Footer";
 
 function MainLayout() {
   return (
@@ -37,6 +38,7 @@ function MainLayout() {
         </div>
         <Habit />
       </section>
+       <Footer />
     </main>
   )
 }

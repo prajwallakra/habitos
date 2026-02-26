@@ -56,7 +56,7 @@ function Habit() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredHabits.map(habit => (
           <HabitCard
-            key={habit.id}
+            key={habit.id} // Keep simple ID as key
             habit={habit}
             onClick={() => setSelectedHabit(habit)}
             onEdit={(e) => handleEdit(habit, e)}
@@ -98,8 +98,13 @@ function Habit() {
 function EmptyState() {
   return (
     <div className="text-center py-12">
+      <div className="mb-4">
+        <svg className="w-16 h-16 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
       <p className="text-[#9c9c9c] mb-2">No habits found</p>
-      <p className="text-xs text-[#6b6b6b]">Click "New Habit" to start tracking</p>
+      <p className="text-xs text-[#6b6b6b]">Click "New Habit" to start tracking your daily routines</p>
     </div>
   )
 }

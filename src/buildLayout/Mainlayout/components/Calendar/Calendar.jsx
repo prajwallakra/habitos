@@ -15,7 +15,7 @@ function Calendar() {
 
   const baseDate = new Date(selectedDate)
 
-  /* ---------- generate week safely ---------- */
+  //  generate week safely 
   const currentWeek = useMemo(() => {
     const base = new Date(baseDate)
     const day = base.getDay()
@@ -31,25 +31,25 @@ function Calendar() {
     })
   }, [selectedDate])
 
-  /* ---------- week navigation ---------- */
+  // week navigation 
   function changeWeek(offset) {
     const d = new Date(selectedDate)
     d.setDate(d.getDate() + offset * 7)
     setSelectedDate(d.toISOString().split("T")[0])
   }
 
-  /* ---------- handle task click for editing ---------- */
+  //  handle task click for editing 
   function handleTaskClick(task) {
     setEditingTask(task)
   }
 
-  /* ---------- close modal ---------- */
+  //  close modal 
   function handleCloseModal() {
     setTaskDate(null)
     setEditingTask(null)
   }
 
-  /* ---------- label ---------- */
+  //  label 
   const label = new Date(selectedDate)
     .toLocaleString("default", { month: "short", year: "numeric" })
 

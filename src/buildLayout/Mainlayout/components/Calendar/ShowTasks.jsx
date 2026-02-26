@@ -8,7 +8,7 @@ function ShowTasks({ date, mode = "list", onTaskClick }) {
   const completedTasks = dayTasks.filter(t => t.completed).length
   const totalTasks = dayTasks.length
 
-  /* ---------- toggle task completion ---------- */
+  //  toggle task completion
   function toggleTaskCompletion(taskId, e) {
     e.stopPropagation()
     const task = tasks.find(t => t.id === taskId)
@@ -22,7 +22,7 @@ function ShowTasks({ date, mode = "list", onTaskClick }) {
     }
   }
 
-  /* ---------- handle task click for editing ---------- */
+  //  handle task click for editing
   function handleTaskClick(task, e) {
     e.stopPropagation()
     if (onTaskClick) {

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useState, useEffect, useCallback } from "react"
 
 const AppContext = createContext()
 
@@ -17,7 +17,14 @@ export function AppProvider({ children }) {
   /* ---------- HABITS with localStorage ---------- */
   const [habits, setHabits] = useState(() => {
     const savedHabits = localStorage.getItem("habits")
-    return savedHabits ? JSON.parse(savedHabits) : []
+    if (savedHabits) {
+      const parsedHabits = JSON.parse(savedHabits)
+      return parsedHabits.map(habit => ({
+        ...habit,
+        targetDays: habit.targetDays || 365
+      }))
+    }
+    return []
   })
 
   /* ---------- NOTES with localStorage ---------- */
@@ -40,16 +47,16 @@ export function AppProvider({ children }) {
   }, [notes])
 
   /* ---------- TASK FUNCTIONS ---------- */
-  function addTask(task) {
+  const addTask = useCallback((task) => {
     const newTask = {
       ...task,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
     setTasks(prev => [...prev, newTask])
-  }
+  }, [])
 
-  function updateTask(id, updates) {
+  const updateTask = useCallback((id, updates) => {
     setTasks(prev =>
       prev.map(task => {
         if (task.id === id) {
@@ -62,9 +69,9 @@ export function AppProvider({ children }) {
         return task
       })
     )
-  }
+  }, [])
 
-  function toggleTask(id) {
+  const toggleTask = useCallback((id) => {
     setTasks(prev =>
       prev.map(task =>
         task.id === id
@@ -77,46 +84,55 @@ export function AppProvider({ children }) {
           : task
       )
     )
-  }
+  }, [])
 
-  function deleteTask(id) {
+  const deleteTask = useCallback((id) => {
     setTasks(prev => prev.filter(task => task.id !== id))
-  }
+  }, [])
 
   /* ---------- HABIT FUNCTIONS ---------- */
-  function addHabit(habit) {
+  const addHabit = useCallback((habit) => {
     const newHabit = {
-      ...habit,
-      createdAt: new Date().toISOString()
+      id: habit.id || crypto.randomUUID(),
+      name: habit.name,
+      description: habit.description || "",
+      color: habit.color || "#6366f1",
+      targetDays: habit.targetDays || 365,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     }
     setHabits(prev => [...prev, newHabit])
-  }
+  }, [])
 
-  function updateHabit(id, updates) {
+  const updateHabit = useCallback((id, updates) => {
     setHabits(prev =>
       prev.map(habit =>
         habit.id === id
-          ? { ...habit, ...updates }
+          ? { 
+              ...habit, 
+              ...updates, 
+              updatedAt: new Date().toISOString() 
+            }
           : habit
       )
     )
-  }
+  }, [])
 
-  function deleteHabit(id) {
+  const deleteHabit = useCallback((id) => {
     setHabits(prev => prev.filter(habit => habit.id !== id))
-  }
+  }, [])
 
   /* ---------- NOTES FUNCTIONS ---------- */
-  function updateNotes(value) {
+  const updateNotes = useCallback((value) => {
     setNotes(value)
-  }
+  }, [])
 
   /* ---------- FILTERED DATA ---------- */
   const todaysTasks = tasks.filter(task => task.date === selectedDate)
 
-  const tasksByDate = (date) => {
+  const tasksByDate = useCallback((date) => {
     return tasks.filter(task => task.date === date)
-  }
+  }, [tasks])
 
   const completedTasksCount = tasks.filter(t => t.completed).length
   const totalTasksCount = tasks.length
@@ -124,7 +140,52 @@ export function AppProvider({ children }) {
     ? Math.round((completedTasksCount / totalTasksCount) * 100) 
     : 0
 
-  /* ---------- CONTEXT VALUE ---------- */
+  // Memoized helper functions
+  const getHabitById = useCallback((id) => {
+    return habits.find(habit => habit.id === id)
+  }, [habits])
+
+  const getTasksByHabit = useCallback((habitId) => {
+    return tasks.filter(task => task.habitId === habitId)
+  }, [tasks])
+
+  const getHabitStats = useCallback((habitId) => {
+    const habitTasks = tasks.filter(task => task.habitId === habitId)
+    const completedTasks = habitTasks.filter(t => t.completed).length
+    const totalTasks = habitTasks.length
+    
+    let streak = 0
+    const today = new Date().toISOString().split('T')[0]
+    let currentDate = new Date()
+    
+    while (true) {
+      const dateStr = currentDate.toISOString().split('T')[0]
+      const dayTasks = habitTasks.filter(t => t.date === dateStr)
+      if (dayTasks.some(t => t.completed)) {
+        streak++
+        currentDate.setDate(currentDate.getDate() - 1)
+      } else {
+        break
+      }
+    }
+
+    return {
+      totalTasks,
+      completedTasks,
+      streak,
+      completionRate: totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
+    }
+  }, [tasks])
+
+  // Memoized habits with tasks
+  const habitsWithTasks = useMemo(() => {
+    return habits.map(habit => ({
+      ...habit,
+      tasks: tasks.filter(task => task.habitId === habit.id),
+      stats: getHabitStats(habit.id)
+    }))
+  }, [habits, tasks, getHabitStats])
+
   const value = {
     selectedDate,
     setSelectedDate,
@@ -136,9 +197,13 @@ export function AppProvider({ children }) {
     toggleTask,
     deleteTask,
     habits,
+    habitsWithTasks,
     addHabit,
     updateHabit,
     deleteHabit,
+    getHabitById,
+    getTasksByHabit,
+    getHabitStats,
     notes,
     updateNotes,
     completedTasksCount,

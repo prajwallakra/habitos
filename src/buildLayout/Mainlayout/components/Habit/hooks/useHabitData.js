@@ -1,11 +1,13 @@
 import { useMemo } from "react"
-import { useApp } from "../../../../context/AppContext"
+import { useApp } from "../../../../../context/AppContext"
 
 export function useHabitData() {
   const { habits, tasks } = useApp()
   const today = new Date().toISOString().split('T')[0]
 
+  // Use useMemo with proper dependencies
   const stats = useMemo(() => {
+    console.log("Recalculating habit stats...") 
     const totalHabits = habits.length
     const habitsCompletedToday = habits.filter(habit => {
       const habitTasks = tasks.filter(t => t.habitId === habit.id && t.date === today)
@@ -17,15 +19,15 @@ export function useHabitData() {
       habitsCompletedToday,
       completionRate: totalHabits > 0 ? Math.round((habitsCompletedToday / totalHabits) * 100) : 0
     }
-  }, [habits, tasks, today])
+  }, [habits, tasks, today]) // Dependencies ensure recalculation when tasks change
 
   const habitsWithData = useMemo(() => {
+    console.log("Recalculating habits with data...") // Debug log
     return habits.map(habit => {
       const habitTasks = tasks.filter(t => t.habitId === habit.id)
       const todayTasks = habitTasks.filter(t => t.date === today)
-      const targetDays = habit.targetDays || 365 // Default to 365 if not set
+      const targetDays = habit.targetDays || 365
       
-      // Get last targetDays completion
       const lastTargetDays = Array.from({ length: targetDays }, (_, i) => {
         const date = new Date()
         date.setDate(date.getDate() - i)
@@ -38,7 +40,6 @@ export function useHabitData() {
         }
       })
 
-      // Calculate streak
       let streak = 0
       let currentDate = new Date()
       while (true) {
@@ -67,10 +68,10 @@ export function useHabitData() {
         completionRate,
         totalTasks: habitTasks.length,
         completedTasks: habitTasks.filter(t => t.completed).length,
-        lastTargetDays // Renamed from last365Days to be more generic
+        lastTargetDays
       }
     })
-  }, [habits, tasks, today])
+  }, [habits, tasks, today]) // Dependencies ensure recalculation when tasks change
 
   return {
     stats,
