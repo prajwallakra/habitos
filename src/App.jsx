@@ -4,7 +4,7 @@ import Rightbar from "./buildLayout/Rightbar/Rightbar"
 
 function App() {
   return (
-    <div className="flex min-h-screen bg-[#0f0f0f] text-white">
+    <div className="flex min-h-screen bg-(--bg-main) text-(--text-primary)">
       <Sidebar />
       <MainLayout />
       <Rightbar />

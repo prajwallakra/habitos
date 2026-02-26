@@ -8,7 +8,7 @@ function SelectDate({ baseDate, onSelect, onClose }) {
   const ref = useRef()
   const yearScrollRef = useRef()
 
-  // close popup when clicking outside 
+  // close popup when clicking outside
   useEffect(() => {
     function handleClick(e) {
       if (!ref.current?.contains(e.target)) {
@@ -19,7 +19,7 @@ function SelectDate({ baseDate, onSelect, onClose }) {
     return () => document.removeEventListener("mousedown", handleClick)
   }, [onClose])
 
-  //  auto scroll active year to center
+  // auto scroll active year
   useEffect(() => {
     if (mode === "years" && yearScrollRef.current) {
       const container = yearScrollRef.current
@@ -44,10 +44,8 @@ function SelectDate({ baseDate, onSelect, onClose }) {
   const year = viewDate.getFullYear()
   const month = viewDate.getMonth()
 
-  // calculate month laout
   const firstDay = new Date(year, month, 1).getDay()
   const offset = firstDay === 0 ? 6 : firstDay - 1
-
   const lastDay = new Date(year, month + 1, 0).getDate()
 
   const days = [
@@ -55,19 +53,16 @@ function SelectDate({ baseDate, onSelect, onClose }) {
     ...Array.from({ length: lastDay }, (_, i) => i + 1)
   ]
 
-  //  year list 
   const years = Array.from({ length: 200 }, (_, i) => year - 100 + i)
 
   const selected = new Date(baseDate)
 
-  // today checker 
   const today = new Date()
   const isToday = (d) =>
     today.getDate() === d &&
     today.getMonth() === month &&
     today.getFullYear() === year
 
-  //  select day 
   function handlePick(day) {
     const d = new Date(Date.UTC(year, month, day))
     onSelect(d.toISOString().split("T")[0])
@@ -78,7 +73,7 @@ function SelectDate({ baseDate, onSelect, onClose }) {
 
       <div
         ref={ref}
-        className="bg-[#171717] border border-[#2a2a2a] rounded-xl p-4 w-80 shadow-lg"
+        className="bg-(--bg-card) border border-(--border) rounded-xl p-4 w-80 shadow-lg"
       >
 
         {/* HEADER */}
@@ -86,7 +81,7 @@ function SelectDate({ baseDate, onSelect, onClose }) {
 
           <button
             onClick={() => setViewDate(new Date(year, month - 1, 1))}
-            className="hover:text-indigo-400"
+            className="text-(--text-primary) hover:text-indigo-400"
           >
             ‹
           </button>
@@ -95,14 +90,14 @@ function SelectDate({ baseDate, onSelect, onClose }) {
 
             <button
               onClick={() => setMode("months")}
-              className="hover:text-indigo-400"
+              className="text-(--text-primary) hover:text-indigo-400"
             >
               {monthNames[month]}
             </button>
 
             <button
               onClick={() => setMode("years")}
-              className="hover:text-indigo-400"
+              className="text-(--text-primary) hover:text-indigo-400"
             >
               {year}
             </button>
@@ -111,7 +106,7 @@ function SelectDate({ baseDate, onSelect, onClose }) {
 
           <button
             onClick={() => setViewDate(new Date(year, month + 1, 1))}
-            className="hover:text-indigo-400"
+            className="text-(--text-primary) hover:text-indigo-400"
           >
             ›
           </button>
@@ -121,7 +116,7 @@ function SelectDate({ baseDate, onSelect, onClose }) {
         {/* DAYS VIEW */}
         {mode === "days" && (
           <>
-            <div className="grid grid-cols-7 text-xs text-gray-400 mb-2">
+            <div className="grid grid-cols-7 text-xs text-(--text-secondary) mb-2">
               {weekdays.map(d => (
                 <div key={d} className="text-center">{d}</div>
               ))}
@@ -142,11 +137,12 @@ function SelectDate({ baseDate, onSelect, onClose }) {
                     onClick={() => handlePick(day)}
                     className={`
                       p-2 rounded transition
-                      ${isSelected
-                        ? "bg-indigo-600 text-white"
-                        : isToday(day)
-                          ? "border border-blue-500"
-                          : "hover:bg-indigo-600/80"
+                      ${
+                        isSelected
+                          ? "bg-indigo-600 text-white"
+                          : isToday(day)
+                            ? "border border-blue-500"
+                            : "hover:bg-(--bg-hover)"
                       }
                     `}
                   >
@@ -170,9 +166,10 @@ function SelectDate({ baseDate, onSelect, onClose }) {
                 }}
                 className={`
                   p-3 rounded
-                  ${i === month
-                    ? "bg-indigo-600 text-white"
-                    : "hover:bg-indigo-600/80"
+                  ${
+                    i === month
+                      ? "bg-indigo-600 text-white"
+                      : "hover:bg-(--bg-hover)"
                   }
                 `}
               >
@@ -197,9 +194,10 @@ function SelectDate({ baseDate, onSelect, onClose }) {
                 }}
                 className={`
                   p-2 rounded
-                  ${y === year
-                    ? "bg-indigo-600 text-white active-year"
-                    : "hover:bg-indigo-600/80"
+                  ${
+                    y === year
+                      ? "bg-indigo-600 text-white active-year"
+                      : "hover:bg-(--bg-hover)"
                   }
                 `}
               >

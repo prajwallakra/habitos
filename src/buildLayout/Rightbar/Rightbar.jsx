@@ -8,35 +8,45 @@ import { useTaskFilters } from "./hooks/useTaskFilters"
 
 function Rightbar() {
   const { selectedDate, tasks, notes, updateNotes, updateTask } = useApp()
+
   const [filterBy, setFilterBy] = useState("all")
   const [priorityFilter, setPriorityFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
   const [isNotesFocused, setIsNotesFocused] = useState(false)
 
-  // Use custom hook for task filtering logic
-  const { todaysTasks, filteredTasks, tasksByStatus, stats } = useTaskFilters({
-    tasks,
-    selectedDate,
-    filterBy,
-    priorityFilter,
-    statusFilter
-  })
+  const { todaysTasks, filteredTasks, tasksByStatus, stats } =
+    useTaskFilters({
+      tasks,
+      selectedDate,
+      filterBy,
+      priorityFilter,
+      statusFilter,
+    })
 
   function toggleTaskCompletion(taskId, e) {
     e.stopPropagation()
-    const task = tasks.find(t => t.id === taskId)
+
+    const task = tasks.find((t) => t.id === taskId)
     if (task) {
       const newCompleted = !task.completed
-      updateTask(taskId, { 
+      updateTask(taskId, {
         completed: newCompleted,
-        status: newCompleted ? "completed" : "not-started"
+        status: newCompleted ? "completed" : "not-started",
       })
     }
   }
 
   return (
-    <aside className="h-screen w-[320px] bg-[#1a1a1a] border-l border-[#2a2a2a] flex flex-col text-[#e4e4e4]">
-      <Header 
+    <aside
+      className="
+        h-screen w-[320px]
+        bg-(--bg-card)
+        border-l border-(--border)
+        flex flex-col
+        text-(--text-primary)
+      "
+    >
+      <Header
         selectedDate={selectedDate}
         totalTasks={stats.totalTasks}
         completedTasks={stats.completedTasks}
