@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react"
 import { useApp } from "../../../../context/AppContext"
 import HabitForm from "../Habit/HabitForm"
+import ConfirmModal from "../ConfirmModal"
 
 function AddTaskModal({ date, onClose, taskToEdit = null }) {
   const { habits, addTask, updateTask, deleteTask } = useApp()
   const [showHabitForm, setShowHabitForm] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const [title, setTitle] = useState("")
   const [priority, setPriority] = useState("medium")
@@ -60,10 +62,15 @@ function AddTaskModal({ date, onClose, taskToEdit = null }) {
   }
 
   function handleDelete() {
-    if (taskToEdit && window.confirm("Are you sure you want to delete this task?")) {
-      deleteTask(taskToEdit.id)
-      onClose()
-    }
+    if (!taskToEdit) return
+    setShowDeleteConfirm(true)
+  }
+
+  function confirmDeleteTask() {
+    if (!taskToEdit) return
+    deleteTask(taskToEdit.id)
+    setShowDeleteConfirm(false)
+    onClose()
   }
 
   const isEditing = !!taskToEdit
@@ -223,6 +230,16 @@ function AddTaskModal({ date, onClose, taskToEdit = null }) {
       {showHabitForm && (
         <HabitForm onClose={(id) => handleHabitFormClose(id)} />
       )}
+
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        title="Delete Task"
+        message="Are you sure you want to delete this task? This action cannot be undone."
+        confirmText="Yes"
+        cancelText="No"
+        onConfirm={confirmDeleteTask}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </>
   )
 }
