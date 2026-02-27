@@ -1,7 +1,23 @@
+import { Select } from "../../../../components/ui/Select"
+
 function HabitFilters({ filter, onFilterChange, onAddHabit }) {
+  const options = [
+    {
+      value:'all',
+      label:"All Habits"
+    },
+    {
+      value:'active',
+      label:"Active Today"
+    },
+    {
+      value:'completed',
+      label:"Completed Today"
+    }
+  ]
   return (
     <div className="flex items-center gap-3">
-      <select
+      {/* <select
         value={filter}
         onChange={(e) => onFilterChange(e.target.value)}
         className="
@@ -15,7 +31,9 @@ function HabitFilters({ filter, onFilterChange, onAddHabit }) {
         <option value="all">All Habits</option>
         <option value="active">Active Today</option>
         <option value="completed">Completed Today</option>
-      </select>
+      </select> */}
+
+      <Select filter={filter} options={options} onFilterChange={onFilterChange}/>
 
       <button
         onClick={onAddHabit}
