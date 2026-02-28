@@ -6,12 +6,14 @@ import HabitFilters from "./HabitFilters"
 import HabitCard from "./HabitCard"
 import HabitDetailModal from "./HabitDetailModal"
 import HabitForm from "./HabitForm"
+import ConfirmModal from "../ConfirmModal"
 
 function Habit() {
   const { deleteHabit } = useApp()
   const [showHabitForm, setShowHabitForm] = useState(false)
   const [editingHabit, setEditingHabit] = useState(null)
   const [selectedHabit, setSelectedHabit] = useState(null)
+  const [habitToDelete, setHabitToDelete] = useState(null)
   const [filter, setFilter] = useState("all")
 
   const { stats, habitsWithData } = useHabitData()
@@ -24,9 +26,13 @@ function Habit() {
 
   const handleDelete = (habit, e) => {
     e.stopPropagation()
-    if (window.confirm(`Delete habit "${habit.name}"?`)) {
-      deleteHabit(habit.id)
-    }
+    setHabitToDelete(habit)
+  }
+
+  const confirmDeleteHabit = () => {
+    if (!habitToDelete) return
+    deleteHabit(habitToDelete.id)
+    setHabitToDelete(null)
   }
 
   const handleEdit = (habit, e) => {
@@ -88,6 +94,16 @@ function Habit() {
           }}
         />
       )}
+
+      <ConfirmModal
+        isOpen={!!habitToDelete}
+        title="Delete Habit"
+        message={habitToDelete ? `Are you sure you want to delete \"${habitToDelete.name}\"? This action cannot be undone.` : ""}
+        confirmText="Yes"
+        cancelText="No"
+        onConfirm={confirmDeleteHabit}
+        onCancel={() => setHabitToDelete(null)}
+      />
     </div>
   )
 }

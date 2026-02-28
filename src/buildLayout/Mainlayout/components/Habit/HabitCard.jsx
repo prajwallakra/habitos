@@ -58,7 +58,7 @@ function HabitCard({ habit, onClick, onEdit, onDelete }) {
         </button>
         <button
           onClick={onDelete}
-          className="p-1.5 bg-(--bg-card) rounded-md hover:bg-red-500/20"
+          className="p-1.5 bg-(--bg-card) rounded-md hover:bg-red-500/20 group/delete"
         >
           <DeleteIcon />
         </button>
@@ -225,8 +225,8 @@ function EditIcon() {
 
 function DeleteIcon() {
   return (
-    <svg className="w-3.5 h-3.5 text-(--text-secondary) hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7" />
+    <svg className="w-3.5 h-3.5 text-(--text-secondary) group-hover/delete:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3m4 0H5m14 0l-1 12a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7m4 4v6m6-6v6" />
     </svg>
   )
 }
