@@ -1,8 +1,24 @@
 import Calendar from "./components/Calendar/Calendar"
 import Habit from "./components/Habit/Habit"
 import Footer from "./components/Footer";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 function MainLayout() {
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    await axios.post(
+      "http://localhost:3000/api/auth/logout",
+      {},
+      { withCredentials: true }
+    );
+    setIsAuthenticated(false);
+    navigate("/login");
+  };
+
   return (
     <main
       className="
@@ -12,14 +28,22 @@ function MainLayout() {
       "
     >
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-          HABITOS
-        </h1>
+      <div className="header flex flex-row justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+            HABITOS
+          </h1>
 
-        <p className="text-sm text-(--text-secondary) mt-1">
-          Track your daily habits and build consistency
-        </p>
+          <p className="text-sm text-(--text-secondary) mt-1">
+            Track your daily habits and build consistency
+          </p>
+        </div>
+        <button className="profile flex flex-row gap-1" onClick={handleLogout}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+          </svg>
+          Logout
+        </button>
       </div>
 
       {/* Calendar Section */}
