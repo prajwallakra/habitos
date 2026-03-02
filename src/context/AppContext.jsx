@@ -30,7 +30,7 @@ export function AppProvider({ children }) {
   /* ---------- NOTES with localStorage ---------- */
   const [notes, setNotes] = useState(() => {
     const savedNotes = localStorage.getItem("notes")
-    return savedNotes ? JSON.parse(savedNotes) : ""
+    return savedNotes ? JSON.parse(savedNotes) : {}
   })
 
   /* ---------- Save to localStorage on changes ---------- */
@@ -76,11 +76,11 @@ export function AppProvider({ children }) {
       prev.map(task =>
         task.id === id
           ? {
-              ...task,
-              completed: !task.completed,
-              status: !task.completed ? "completed" : task.status,
-              updatedAt: new Date().toISOString()
-            }
+            ...task,
+            completed: !task.completed,
+            status: !task.completed ? "completed" : task.status,
+            updatedAt: new Date().toISOString()
+          }
           : task
       )
     )
@@ -109,10 +109,10 @@ export function AppProvider({ children }) {
       prev.map(habit =>
         habit.id === id
           ? {
-              ...habit,
-              ...updates,
-              updatedAt: new Date().toISOString()
-            }
+            ...habit,
+            ...updates,
+            updatedAt: new Date().toISOString()
+          }
           : habit
       )
     )
@@ -127,9 +127,50 @@ export function AppProvider({ children }) {
     setNotes(value)
   }, [])
 
+  const addNote = (note) => {
+    const newNote = {
+      id: note.id || crypto.randomUUID(),
+      content: note.content,
+    }
+    setNotes(prev => {
+      const dayExists = prev.find(day => day.date === note.date);
+
+      if (dayExists) {
+        return (
+          prev.map(day => (
+            day.date === note.date ?
+              {
+                ...day,
+                notes: [...day.notes, newNote]
+              } :
+              day
+          ))
+        )
+      }
+      return (
+        [...prev, {
+          date: note.date,
+          notes: [newNote]
+        }]
+      )
+    })
+  };
+
+  const deleteNote = (id) => {
+    setNotes(prev =>
+      prev
+        .map(day => ({
+          ...day,
+          notes: day.notes.filter((note) => note.id !== id)
+        }))
+        .filter(day => day.notes.length > 0)
+    );
+  }
+
+
   /* ---------- FILTERED DATA ---------- */
   const todaysTasks = tasks.filter(task => task.date === selectedDate)
-
+  const todaysNotes = notes.filter(note => note.date === selectedDate)
   const tasksByDate = useCallback((date) => {
     return tasks.filter(task => task.date === date)
   }, [tasks])
