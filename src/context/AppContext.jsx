@@ -30,7 +30,7 @@ export function AppProvider({ children }) {
   /* ---------- NOTES with localStorage ---------- */
   const [notes, setNotes] = useState(() => {
     const savedNotes = localStorage.getItem("notes")
-    return savedNotes ? JSON.parse(savedNotes) : {}
+    return savedNotes ? JSON.parse(savedNotes) : []
   })
 
   /* ---------- Save to localStorage on changes ---------- */
@@ -233,6 +233,7 @@ export function AppProvider({ children }) {
     setSelectedDate,
     tasks,
     todaysTasks,
+    todaysNotes,
     tasksByDate,
     addTask,
     updateTask,
@@ -248,6 +249,8 @@ export function AppProvider({ children }) {
     getHabitStats,
     notes,
     updateNotes,
+    addNote,
+    deleteNote,
     completedTasksCount,
     totalTasksCount,
     completionRate
