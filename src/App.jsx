@@ -1,3 +1,4 @@
+import Stopwatch from "./components/ui/stopwatch.jsx";
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
@@ -20,7 +21,19 @@ function App() {
         <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard"/>}/>
 
         {/* Protected Routes */}
-        <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}/>
+         <Route
+          path="/dashboard"
+          element={
+            isAuthenticated ? (
+              <>
+                <Stopwatch />
+                <Dashboard />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
         
         {/* Default Route */}
         <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"}/>}/>

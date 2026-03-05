@@ -22,9 +22,9 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    try {
+   try {
       await axios.post(
-        "http://localhost:3000/api/auth/login",
+        "http://localhost:5173/api/auth/login",
         formData,
         { withCredentials: true }
       );
@@ -32,10 +32,12 @@ const Login = () => {
       setIsAuthenticated(true);
       navigate("/dashboard");
 
-    } catch (err) {
+    } 
+    catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }
-  };
+
+  } ;
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-(--bg-main)">
