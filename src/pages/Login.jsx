@@ -22,20 +22,24 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    try {
-      await axios.post(
-        "http://localhost:3000/api/auth/login",
-        formData,
-        { withCredentials: true }
-      );
+  //  try {
+  //     await axios.post(
+  //       "http://localhost:5173/api/auth/login",
+  //       formData,
+  //       { withCredentials: true }
+  //     );
 
-      setIsAuthenticated(true);
-      navigate("/dashboard");
+  //     setIsAuthenticated(true);
+  //     navigate("/dashboard");
 
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-    }
-  };
+  //   } 
+  //   catch (err) {
+  //     setError(err.response?.data?.message || "Login failed");
+  //   }
+
+  setIsAuthenticated(true);
+  navigate("/dashboard");
+  } ;
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-(--bg-main)">
