@@ -15,3 +15,17 @@ export const seedTasks = [
     completed: false
   }
 ]
+
+const seedNotes = [
+  {
+    date: new Date().toISOString().split("T")[0],
+    notes: [
+      {
+        id: "n1",
+        content: "This is my mock note 1.1"
+      }
+    ]
+  }
+]
+
+

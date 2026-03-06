@@ -92,3 +92,35 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
 }
+
+textarea{
+  padding:7px
+}
+
+textarea::-webkit-scrollbar {
+  width: 6px;
+}
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+textarea::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 20px;
+}
+textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 20px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
