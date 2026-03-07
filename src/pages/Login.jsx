@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import instance from "../utils/axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,10 +23,9 @@ const Login = () => {
     setError("");
 
     try {
-      await axios.post(
-        "http://localhost:3000/api/auth/login",
-        formData,
-        { withCredentials: true }
+      await instance.post(
+        "/api/auth/login",
+        formData
       );
 
       setIsAuthenticated(true);
